@@ -1,6 +1,7 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+import android.widget.ImageView
 import androidx.lifecycle.*
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModel
@@ -13,9 +14,11 @@ private val empty = Post(
     id = 0,
     content = "",
     author = "",
+    authorAvatar = "",
     likedByMe = false,
     likes = 0,
-    published = ""
+    published = "",
+    attachment = null
 )
 
 class PostViewModel(application: Application) : AndroidViewModel(application) {
@@ -33,6 +36,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         loadPosts()
     }
 
+    fun setAvatar(avatar: ImageView, post: Post) {
+        repository.setAvatar(avatar, post)
+    }
+
+    fun setAttachmentImage(imageView: ImageView, post: Post) {
+        repository.setImageAttachment(imageView, post)
+    }
+
     fun loadPosts() {
         _data.value = FeedModel(loading = true)
         repository.getAllAsync(object : PostRepository.PostCallback<List<Post>> {
@@ -45,6 +56,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
         })
     }
+
+
 
     fun save() {
         edited.value?.let {
@@ -116,7 +129,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             override fun onError(e: Exception) {
                 _data.postValue(_data.value?.copy(posts = old))
             }
-
         })
     }
 }

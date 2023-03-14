@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -50,6 +51,14 @@ class FeedFragment : Fragment() {
                 val shareIntent =
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
+            }
+
+            override fun onSetAvatar(avatar: ImageView, post: Post) {
+                viewModel.setAvatar(avatar, post)
+            }
+
+            override fun onSetAttachmentImage(imageView: ImageView, post: Post) {
+                viewModel.setAttachmentImage(imageView, post)
             }
         })
         binding.list.adapter = adapter

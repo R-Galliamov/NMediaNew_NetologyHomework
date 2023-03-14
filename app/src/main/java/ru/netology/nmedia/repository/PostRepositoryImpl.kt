@@ -1,10 +1,14 @@
 package ru.netology.nmedia.repository
 
+import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
+import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.Post
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -19,6 +23,29 @@ class PostRepositoryImpl : PostRepository {
     companion object {
         private const val BASE_URL = "http://192.168.0.102:9999"
         private val jsonType = "application/json".toMediaType()
+    }
+
+    override fun setAvatar(avatarView: ImageView, post: Post) {
+        val authorAvatar = post.authorAvatar
+        val url = "$BASE_URL/avatars/$authorAvatar"
+        Glide.with(avatarView)
+            .load(url)
+            .placeholder(R.drawable.ic_baseline_downloading_24)
+            .error(R.drawable.ic_baseline_account_circle_24)
+            .apply(RequestOptions().circleCrop())
+            .into(avatarView)
+    }
+
+    override fun setImageAttachment(imageView: ImageView, post: Post) {
+        if (post.attachment != null) {
+            val imageName = post.attachment.url
+            val url = "$BASE_URL/images/$imageName"
+            Glide.with(imageView)
+                .load(url)
+                .placeholder(R.drawable.ic_baseline_downloading_24)
+                .error(R.drawable.ic_baseline_do_not_disturb_24)
+                .into(imageView)
+        }
     }
 
     override fun getAllAsync(callback: PostRepository.PostCallback<List<Post>>) {
@@ -101,7 +128,6 @@ class PostRepositoryImpl : PostRepository {
             }
         })
     }
-
 
     override fun save(post: Post, callback: PostRepository.PostCallback<Unit>) {
         val request: Request = Request.Builder()

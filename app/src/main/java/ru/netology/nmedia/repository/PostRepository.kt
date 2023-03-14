@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+import android.widget.ImageView
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
@@ -9,6 +10,8 @@ interface PostRepository {
     fun save(post: Post, callback: PostCallback<Unit>)
     fun removeById(id: Long, callback: PostCallback<Unit>)
     fun getPostById(id: Long, callback: PostCallback<Post>)
+    fun setAvatar(imageView: ImageView, post: Post)
+    fun setImageAttachment(imageView: ImageView, post: Post)
 
     interface PostCallback<T> {
         fun onSuccess(data: T) {}

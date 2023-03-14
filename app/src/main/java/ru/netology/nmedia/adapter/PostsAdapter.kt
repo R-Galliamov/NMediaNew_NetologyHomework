@@ -2,6 +2,7 @@ package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -15,6 +16,8 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
+    fun onSetAvatar(avatar: ImageView, post: Post){}
+    fun onSetAttachmentImage(imageView: ImageView, post: Post){}
 }
 
 class PostsAdapter(
@@ -44,6 +47,8 @@ class PostViewHolder(
             // в адаптере
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
+            onInteractionListener.onSetAvatar(avatar, post)
+            onInteractionListener.onSetAttachmentImage(attachmentImage, post)
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {
