@@ -1,9 +1,13 @@
 package ru.netology.nmedia.viewmodel
 
 import android.app.Application
+import android.os.Message
 import android.widget.ImageView
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.lifecycle.*
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.errorHandler.ServiceErrorHandler
 import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.repository.*
 import ru.netology.nmedia.util.SingleLiveEvent
@@ -32,6 +36,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+    lateinit var errorMessage: String
+
     init {
         loadPosts()
     }
@@ -53,10 +59,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onError(e: Exception) {
                 _data.postValue(FeedModel(error = true))
+                errorMessage = ServiceErrorHandler.getErrorDescription(e.message.toString())
             }
         })
     }
-
 
 
     fun save() {
@@ -68,7 +74,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Exception) {
-                    super.onError(e)
+                    _data.postValue(FeedModel(error = true))
+                    errorMessage = ServiceErrorHandler.getErrorDescription(e.message.toString())
                 }
             })
         }
@@ -128,6 +135,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onError(e: Exception) {
                 _data.postValue(_data.value?.copy(posts = old))
+                _data.postValue(FeedModel(error = true))
+                errorMessage = ServiceErrorHandler.getErrorDescription(e.message.toString())
             }
         })
     }

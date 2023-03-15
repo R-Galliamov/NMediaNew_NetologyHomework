@@ -1,6 +1,7 @@
 package ru.netology.nmedia.repository
 
 import android.widget.ImageView
+import android.widget.Toast
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {

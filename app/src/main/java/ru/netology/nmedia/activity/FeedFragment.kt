@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -67,7 +68,12 @@ class FeedFragment : Fragment() {
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
+
+            if (state.error) {
+                binding.retryTitle.text = viewModel.errorMessage
+            }
         }
+
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.loadPosts()
