@@ -1,12 +1,17 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
@@ -16,8 +21,6 @@ interface OnInteractionListener {
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onShare(post: Post) {}
-    fun onSetAvatar(avatar: ImageView, post: Post){}
-    fun onSetAttachmentImage(imageView: ImageView, post: Post){}
 }
 
 class PostsAdapter(
@@ -47,8 +50,26 @@ class PostViewHolder(
             // в адаптере
             like.isChecked = post.likedByMe
             like.text = "${post.likes}"
-            onInteractionListener.onSetAvatar(avatar, post)
-            onInteractionListener.onSetAttachmentImage(attachmentImage, post)
+
+            Glide.with(avatar)
+                .load("${BuildConfig.BASE_URL}/avatars/${post.authorAvatar}")
+                .timeout(6000)
+                .placeholder(R.drawable.ic_baseline_downloading_24)
+                .error(R.drawable.ic_baseline_do_not_disturb_24)
+                .apply(
+                    RequestOptions().transform(CircleCrop())
+                )
+                .into(avatar)
+
+            if (post.attachment != null) {
+                attachmentContainer.visibility = View.VISIBLE
+                Glide.with(attachmentImage)
+                    .load("${BuildConfig.BASE_URL}/images/${post.attachment.url}")
+                    .timeout(6000)
+                    .placeholder(R.drawable.ic_baseline_downloading_24)
+                    .error(R.drawable.ic_baseline_do_not_disturb_24)
+                    .into(attachmentImage)
+            }
 
             menu.setOnClickListener {
                 PopupMenu(it.context, it).apply {

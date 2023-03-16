@@ -53,14 +53,6 @@ class FeedFragment : Fragment() {
                     Intent.createChooser(intent, getString(R.string.chooser_share_post))
                 startActivity(shareIntent)
             }
-
-            override fun onSetAvatar(avatar: ImageView, post: Post) {
-                viewModel.setAvatar(avatar, post)
-            }
-
-            override fun onSetAttachmentImage(imageView: ImageView, post: Post) {
-                viewModel.setAttachmentImage(imageView, post)
-            }
         })
         binding.list.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->

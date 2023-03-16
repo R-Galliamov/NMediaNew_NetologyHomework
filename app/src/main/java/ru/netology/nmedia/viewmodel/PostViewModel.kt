@@ -42,14 +42,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         loadPosts()
     }
 
-    fun setAvatar(avatar: ImageView, post: Post) {
-        repository.setAvatar(avatar, post)
-    }
-
-    fun setAttachmentImage(imageView: ImageView, post: Post) {
-        repository.setImageAttachment(imageView, post)
-    }
-
     fun loadPosts() {
         _data.value = FeedModel(loading = true)
         repository.getAllAsync(object : PostRepository.PostCallback<List<Post>> {
